@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class User implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
