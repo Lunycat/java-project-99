@@ -1,5 +1,15 @@
 spring:
   jpa:
+    generate-ddl: true
     show-sql: true
     hibernate:
       ddl-auto: update
+  output:
+    ansi:
+      enabled: always
+  profiles:
+    default: development
+
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
