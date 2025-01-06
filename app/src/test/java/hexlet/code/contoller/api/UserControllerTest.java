@@ -74,7 +74,8 @@ public class UserControllerTest {
 
     @Test
     public void indexTest() throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(get("/api/users"))
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/api/users").with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -88,7 +89,8 @@ public class UserControllerTest {
 
     @Test
     public void showTest() throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(get("/api/users/", testUser.getId()))
+        MockHttpServletResponse response =mockMvc.perform(
+                get("/api/users/", testUser.getId()).with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
