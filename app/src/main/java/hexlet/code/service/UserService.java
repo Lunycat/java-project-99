@@ -42,6 +42,7 @@ public class UserService {
         User user = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found user with id = " + id));
         mapper.update(dto, user);
+        repository.save(user);
         return mapper.toUserDTO(user);
     }
 

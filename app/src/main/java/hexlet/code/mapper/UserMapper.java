@@ -6,7 +6,7 @@ import hexlet.code.dto.userDTO.UserUpdateDTO;
 import hexlet.code.model.User;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class UserMapper {
 
     @Autowired
-    private BCryptPasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     @BeforeMapping
     public void encodePassword(UserCreateDTO dto) {
@@ -29,6 +29,8 @@ public abstract class UserMapper {
 
     public abstract UserDTO toUserDTO(User model);
     public abstract User toUser(UserCreateDTO dto);
+    public abstract User toUser(UserDTO dto);
     public abstract void update(UserUpdateDTO dto, @MappingTarget User destination);
     public abstract List<UserDTO> toListUserDTO(List<User> models);
+    public abstract List<User> toListUser(List<UserDTO> dtoList);
 }
