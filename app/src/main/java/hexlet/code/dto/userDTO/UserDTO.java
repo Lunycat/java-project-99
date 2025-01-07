@@ -2,7 +2,8 @@ package hexlet.code.dto.userDTO;
 
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -12,5 +13,5 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 }

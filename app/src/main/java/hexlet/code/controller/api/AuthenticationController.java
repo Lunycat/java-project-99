@@ -1,6 +1,6 @@
 package hexlet.code.controller.api;
 
-import hexlet.code.dto.userDTO.AuthRequest;
+import hexlet.code.dto.auth.AuthRequest;
 import hexlet.code.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +21,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public String create(@RequestBody AuthRequest authRequest) {
-        var authentication = new UsernamePasswordAuthenticationToken(
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 authRequest.getUsername(), authRequest.getPassword());
 
         authenticationManager.authenticate(authentication);

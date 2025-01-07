@@ -27,8 +27,10 @@ public abstract class UserMapper {
         dto.setPassword(encoder.encode(password));
     }
 
-    public abstract UserDTO toUserDTO(User model);
+    @Mapping(target = "passwordDigest", source = "password")
     public abstract User toUser(UserCreateDTO dto);
+
+    public abstract UserDTO toUserDTO(User model);
     public abstract User toUser(UserDTO dto);
     public abstract void update(UserUpdateDTO dto, @MappingTarget User destination);
     public abstract List<UserDTO> toListUserDTO(List<User> models);
