@@ -7,7 +7,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 
-import lombok.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,11 +31,11 @@ import java.util.Collection;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "users")
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
+@Entity
+@Table(name = "users")
 public class User implements BaseEntity, UserDetails {
 
     @Id
@@ -38,14 +46,17 @@ public class User implements BaseEntity, UserDetails {
 
     @EqualsAndHashCode.Include
     @ToString.Include
+    @NotNull
     private String firstName;
 
     @EqualsAndHashCode.Include
     @ToString.Include
+    @NotNull
     private String lastName;
 
     @EqualsAndHashCode.Include
     @ToString.Include
+    @Email
     private String email;
 
     private String passwordDigest;
