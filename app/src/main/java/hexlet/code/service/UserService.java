@@ -1,8 +1,8 @@
 package hexlet.code.service;
 
-import hexlet.code.dto.userDTO.UserCreateDTO;
-import hexlet.code.dto.userDTO.UserDTO;
-import hexlet.code.dto.userDTO.UserUpdateDTO;
+import hexlet.code.dto.user.UserCreateDTO;
+import hexlet.code.dto.user.UserDTO;
+import hexlet.code.dto.user.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
@@ -21,7 +21,7 @@ public class UserService {
     @Autowired
     private UserMapper mapper;
 
-    public List<UserDTO> getAll() {
+    public List<UserDTO> findAll() {
         List<User> users = repository.findAll();
         return mapper.toListUserDTO(users);
     }
@@ -38,7 +38,7 @@ public class UserService {
         return mapper.toUserDTO(user);
     }
 
-    public UserDTO update(UserUpdateDTO dto, Long id) {
+    public UserDTO put(UserUpdateDTO dto, Long id) {
         User user = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found user with id = " + id));
         mapper.update(dto, user);
@@ -46,7 +46,7 @@ public class UserService {
         return mapper.toUserDTO(user);
     }
 
-    public void destroy(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

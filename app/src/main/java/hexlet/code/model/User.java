@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -40,21 +41,16 @@ public class User implements BaseEntity, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     @ToString.Include
+    @EqualsAndHashCode.Include
     private Long id;
 
-    @EqualsAndHashCode.Include
     @ToString.Include
-    @NotNull
     private String firstName;
 
-    @EqualsAndHashCode.Include
     @ToString.Include
-    @NotNull
     private String lastName;
 
-    @EqualsAndHashCode.Include
     @ToString.Include
     @Email
     private String email;

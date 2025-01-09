@@ -2,7 +2,8 @@ package hexlet.code.contoller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.dto.userDTO.UserDTO;
+import hexlet.code.dto.user.UserCreateDTO;
+import hexlet.code.dto.user.UserDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
@@ -87,8 +88,8 @@ public class UserControllerTest {
         String body = response.getContentAsString();
 
         List<User> expected = userRepository.findAll();
-        List<UserDTO> dtoList = om.readValue(body, new TypeReference<>(){ });
-        List<User> actual = userMapper.toListUser(dtoList);
+        List<UserDTO> listDTOs = om.readValue(body, new TypeReference<>(){ });
+        List<User> actual = userMapper.toListUser(listDTOs);
 
         assertEquals(expected, actual);
     }
@@ -103,8 +104,7 @@ public class UserControllerTest {
         String body = response.getContentAsString();
 
         User expected = userRepository.findById(testUser.getId()).get();
-        UserDTO userDTO = om.readValue(body, new TypeReference<>() { });
-        User actual = userMapper.toUser(userDTO);
+        User actual = om.readValue(body, new TypeReference<>() { });
 
         assertEquals(expected, actual);
     }

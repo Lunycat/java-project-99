@@ -1,11 +1,6 @@
 package hexlet.code.model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 
 import lombok.Getter;
@@ -33,16 +28,18 @@ public class TaskStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ToString.Include
+    @EqualsAndHashCode.Include
     private Long id;
 
     @ToString.Include
-    @EqualsAndHashCode.Include
     @Min(value = 1)
+    @Column(unique = true)
     private String name;
 
     @ToString.Include
-    @EqualsAndHashCode.Include
     @Min(value = 1)
+    @Column(unique = true)
     private String slug;
 
     @CreatedDate
