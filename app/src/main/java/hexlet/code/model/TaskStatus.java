@@ -1,12 +1,18 @@
 package hexlet.code.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+
+import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
 
@@ -18,7 +24,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
@@ -33,12 +38,12 @@ public class TaskStatus {
     private Long id;
 
     @ToString.Include
-    @Min(value = 1)
+    @Size(min = 1)
     @Column(unique = true)
     private String name;
 
     @ToString.Include
-    @Min(value = 1)
+    @Size(min = 1)
     @Column(unique = true)
     private String slug;
 

@@ -2,14 +2,10 @@ package hexlet.code.contoller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.dto.user.UserCreateDTO;
-import hexlet.code.dto.user.UserDTO;
 import hexlet.code.exception.ResourceNotFoundException;
-import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
-import net.datafaker.Faker;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,9 +43,6 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private Faker faker;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -58,9 +50,6 @@ public class UserControllerTest {
 
     @Autowired
     private ObjectMapper om;
-
-    @Autowired
-    private UserMapper userMapper;
 
     private JwtRequestPostProcessor token;
 
@@ -88,8 +77,7 @@ public class UserControllerTest {
         String body = response.getContentAsString();
 
         List<User> expected = userRepository.findAll();
-        List<UserDTO> listDTOs = om.readValue(body, new TypeReference<>(){ });
-        List<User> actual = userMapper.toListUser(listDTOs);
+        List<User> actual = om.readValue(body, new TypeReference<>() { });
 
         assertEquals(expected, actual);
     }
@@ -128,10 +116,9 @@ public class UserControllerTest {
 
     @Test
     public void updateTest() throws Exception {
-        Map<String, String> data = new HashMap<>();
-        data.putAll(Map.of(
+        Map<String, String> data = Map.of(
                 "firstName", "Mike",
-                "lastName", "Smith"));
+                "lastName", "Smith");
 
         mockMvc.perform(put("/api/users/" + testUser.getId())
                         .with(token)
@@ -146,7 +133,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void destroyTest() throws Exception {
+    public void deleteTest() throws Exception {
         mockMvc.perform(delete("/api/users/" + testUser.getId()).with(token))
                 .andExpect(status().isNoContent());
 

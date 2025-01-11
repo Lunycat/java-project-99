@@ -1,7 +1,8 @@
 package hexlet.code.dto.user;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,8 +15,9 @@ public class UserCreateDTO {
     private String lastName;
 
     @Email
+    @Column(unique = true)
     private String email;
 
-    @Min(value = 3)
+    @Size(min = 3)
     private String password;
 }
