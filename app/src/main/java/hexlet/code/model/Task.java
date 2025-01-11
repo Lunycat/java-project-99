@@ -1,13 +1,8 @@
 package hexlet.code.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
@@ -28,25 +23,33 @@ import java.time.LocalDate;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "task_statuses")
-public class TaskStatus {
+@Table(name = "tasks")
+public class Task implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ToString.Include
     @EqualsAndHashCode.Include
+    @ToString.Include
     private Long id;
 
     @ToString.Include
     @Size(min = 1)
-    @Column(unique = true)
     private String name;
 
     @ToString.Include
-    @Size(min = 1)
-    @Column(unique = true)
-    private String slug;
+    private int index;
+
+    @ToString.Include
+    private String description;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    private TaskStatus taskStatus;
+
+    private User assignee;
 
     @CreatedDate
     private LocalDate createdAt;
+
+
 }
