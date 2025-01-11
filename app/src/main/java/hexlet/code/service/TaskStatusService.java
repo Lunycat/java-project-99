@@ -28,19 +28,19 @@ public class TaskStatusService {
 
     public TaskStatusDTO findById(Long id) {
         TaskStatus taskStatus = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found user with id = " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Not found task status with id = " + id));
         return mapper.toTaskStatusDTO(taskStatus);
     }
 
-    public TaskStatusDTO create(TaskStatusCreateDTO dto) {
+    public TaskStatusDTO save(TaskStatusCreateDTO dto) {
         TaskStatus taskStatus = mapper.toTask(dto);
         repository.save(taskStatus);
         return mapper.toTaskStatusDTO(taskStatus);
     }
 
-    public TaskStatusDTO put(TaskStatusUpdateDTO dto, Long id) {
+    public TaskStatusDTO update(TaskStatusUpdateDTO dto, Long id) {
         TaskStatus taskStatus = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found user with id = " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Not found task status with id = " + id));
         mapper.update(dto, taskStatus);
         repository.save(taskStatus);
         return mapper.toTaskStatusDTO(taskStatus);

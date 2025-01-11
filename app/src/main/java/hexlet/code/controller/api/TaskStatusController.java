@@ -41,13 +41,13 @@ public class TaskStatusController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TaskStatusDTO create(@RequestBody @Valid TaskStatusCreateDTO dto) {
-        return service.create(dto);
+        return service.save(dto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TaskStatusDTO put(@RequestBody @Valid TaskStatusUpdateDTO dto, @PathVariable Long id) {
-        return service.put(dto, id);
+        return service.update(dto, id);
     }
 
     @DeleteMapping("/{id}")

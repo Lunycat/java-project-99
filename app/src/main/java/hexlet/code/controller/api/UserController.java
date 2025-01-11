@@ -41,13 +41,13 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO create(@RequestBody @Valid UserCreateDTO dto) {
-        return service.create(dto);
+        return service.save(dto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDTO put(@RequestBody @Valid UserUpdateDTO dto, @PathVariable Long id) {
-        return service.put(dto, id);
+        return service.update(dto, id);
     }
 
     @DeleteMapping("/{id}")

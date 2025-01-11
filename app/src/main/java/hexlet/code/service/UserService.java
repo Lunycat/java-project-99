@@ -32,13 +32,13 @@ public class UserService {
         return mapper.toUserDTO(user);
     }
 
-    public UserDTO create(UserCreateDTO dto) {
+    public UserDTO save(UserCreateDTO dto) {
         User user = mapper.toUser(dto);
         repository.save(user);
         return mapper.toUserDTO(user);
     }
 
-    public UserDTO put(UserUpdateDTO dto, Long id) {
+    public UserDTO update(UserUpdateDTO dto, Long id) {
         User user = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found user with id = " + id));
         mapper.update(dto, user);
