@@ -10,10 +10,11 @@ import java.time.LocalDate;
 public class TaskDTO {
 
     private Long id;
-    private String name;
     private int index;
-    private String description;
-    private String taskStatus;
-    private Long assignee_id;
+    private String title;
+    private String text;
+    private String content;
+    private String status;
+    private Long assigneeId;
     private LocalDate createdAt;
 }

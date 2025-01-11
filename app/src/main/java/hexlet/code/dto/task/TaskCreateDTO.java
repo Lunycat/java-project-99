@@ -7,9 +7,10 @@ import lombok.Setter;
 @Setter
 public class TaskCreateDTO {
 
-    private String name;
     private int index;
-    private String description;
-    private String taskStatus;
+    private String title;
+    private String text;
+    private String content;
+    private String status;
     private Long assigneeId;
 }

@@ -46,6 +46,7 @@ public class Task implements BaseEntity {
     @NotNull
     private TaskStatus taskStatus;
 
+    @ManyToOne
     private User assignee;
 
     @CreatedDate
