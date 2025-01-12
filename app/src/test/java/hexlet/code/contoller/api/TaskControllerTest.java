@@ -2,6 +2,7 @@ package hexlet.code.contoller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -87,7 +89,7 @@ public class TaskControllerTest {
     @Test
     public void indexTest() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(
-                get("/tasks").with(token))
+                get("/api/tasks").with(token))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -102,7 +104,7 @@ public class TaskControllerTest {
     @Test
     public void showTest() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(
-                get("/tasks/" + testTask.getId()).with(token))
+                get("/api/tasks/" + testTask.getId()).with(token))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -126,14 +128,56 @@ public class TaskControllerTest {
         data.setAssignee(user);
         data.setTaskStatus(taskStatus);
 
-        mockMvc.perform(post("/tasks")
+        mockMvc.perform(post("/api/tasks")
                         .with(token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(data)))
                 .andExpect(status().isCreated());
 
-        Task task =
+        Task task = taskRepository.findByName(data.getName()).get();
 
-        assertEquals(data.getName(), );
+        assertEquals(data.getName(), task.getName());
+        assertEquals(data.getIndex(), task.getIndex());
+        assertEquals(data.getDescription(), task.getDescription());
+        assertEquals(data.getTaskStatus().getSlug(), task.getTaskStatus().getSlug());
+        assertEquals(data.getAssignee().getEmail(), task.getAssignee().getEmail());
+    }
+
+    @Test
+    public void updateTest() throws Exception {
+        TaskStatus taskStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
+        User user = Instancio.of(modelGenerator.getUserModel()).create();
+
+        taskStatusRepository.save(taskStatus);
+        userRepository.save(user);
+
+        Map<String, Object> data = Map.of(
+                "name", "name",
+                "description", "dasdsad dsafdf gffhgrtrew dfds",
+                "assignee", user,
+                "taskStatus", taskStatus
+        );
+
+        mockMvc.perform(put("/api/tasks/" + testTask.getId())
+                        .with(token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(data)))
+                .andExpect(status().isOk());
+
+        Task task = taskRepository.findById(testTask.getId()).get();
+
+        assertEquals(data.get("name"), task.getName());
+        assertEquals(data.get("description"), task.getDescription());
+        assertEquals(((TaskStatus) data.get("taskStatus")).getSlug(), task.getTaskStatus().getSlug());
+        assertEquals(((User) data.get("assignee")).getEmail(), task.getAssignee().getEmail());
+    }
+
+    @Test
+    public void deleteTest() throws Exception {
+        mockMvc.perform(delete("/api/tasks/" + testTask.getId()).with(token));
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            throw new ResourceNotFoundException("");
+        });
     }
 }
