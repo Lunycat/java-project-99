@@ -13,6 +13,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.BeforeMapping;
 
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -33,6 +34,12 @@ public abstract class UserMapper {
     public void encodePassword(UserCreateDTO dto) {
         String password = dto.getPassword();
         dto.setPassword(encoder.encode(password));
+    }
+
+    @BeforeMapping
+    public void encodePassword(UserUpdateDTO dto) {
+        String password = dto.getPassword().get();
+        dto.setPassword(JsonNullable.of(encoder.encode(password)));
     }
 
     @Mapping(target = "passwordDigest", source = "password")

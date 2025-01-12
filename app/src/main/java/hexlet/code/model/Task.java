@@ -52,5 +52,4 @@ public class Task implements BaseEntity {
     @CreatedDate
     private LocalDate createdAt;
 
-
 }
