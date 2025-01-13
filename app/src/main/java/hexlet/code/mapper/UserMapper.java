@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 
 @Mapper(
-        uses = {JsonNullableMapper.class, ReferenceMapper.class},
+        uses = {JsonNullableMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
@@ -45,9 +45,11 @@ public abstract class UserMapper {
     @Mapping(target = "passwordDigest", source = "password")
     public abstract User toUser(UserCreateDTO dto);
 
+    @Mapping(source = "password", target = "passwordDigest")
+    public abstract void update(UserUpdateDTO dto, @MappingTarget User destination);
+
     public abstract UserDTO toUserDTO(User model);
     public abstract User toUser(UserDTO dto);
-    public abstract void update(UserUpdateDTO dto, @MappingTarget User destination);
     public abstract List<UserDTO> toListUserDTO(List<User> models);
     public abstract List<User> toListUser(List<UserDTO> dtoList);
 }

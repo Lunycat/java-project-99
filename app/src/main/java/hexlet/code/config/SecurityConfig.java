@@ -44,6 +44,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/*").permitAll()
                         .requestMatchers("/api/task_statuses").permitAll()
                         .requestMatchers("/api/task_statuses/*").permitAll()
+                        .requestMatchers("/api/tasks").permitAll()
+                        .requestMatchers("/api/tasks/*").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((rs) -> rs.jwt((jwt) -> jwt.decoder(jwtDecoder)))

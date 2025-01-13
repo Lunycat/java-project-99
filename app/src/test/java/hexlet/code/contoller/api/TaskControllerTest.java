@@ -2,7 +2,9 @@ package hexlet.code.contoller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
+import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
@@ -61,7 +63,14 @@ public class TaskControllerTest {
     @Autowired
     private ObjectMapper om;
 
+    @Autowired
+    private TaskMapper taskMapper;
+
     private JwtRequestPostProcessor token;
+
+    private TaskStatus testTaskStatus;
+
+    private User testUser;
 
     private Task testTask;
 
@@ -74,14 +83,14 @@ public class TaskControllerTest {
 
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         testTask = Instancio.of(modelGenerator.getTaskModel()).create();
-        TaskStatus taskStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
-        User user = Instancio.of(modelGenerator.getUserModel()).create();
+        testTaskStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
+        testUser = Instancio.of(modelGenerator.getUserModel()).create();
 
-        taskStatusRepository.save(taskStatus);
-        userRepository.save(user);
+        taskStatusRepository.save(testTaskStatus);
+        userRepository.save(testUser);
 
-        testTask.setAssignee(user);
-        testTask.setTaskStatus(taskStatus);
+        testTask.setAssignee(testUser);
+        testTask.setTaskStatus(testTaskStatus);
 
         taskRepository.save(testTask);
     }
@@ -118,15 +127,11 @@ public class TaskControllerTest {
 
     @Test
     public void createTest() throws Exception {
-        Task data = Instancio.of(modelGenerator.getTaskModel()).create();
-        TaskStatus taskStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
-        User user = Instancio.of(modelGenerator.getUserModel()).create();
+        TaskCreateDTO data = new TaskCreateDTO();
 
-        taskStatusRepository.save(taskStatus);
-        userRepository.save(user);
-
-        data.setAssignee(user);
-        data.setTaskStatus(taskStatus);
+        data.setTitle("Title");
+        data.setAssigneeId(testUser.getId());
+        data.setStatus(testTaskStatus.getSlug());
 
         mockMvc.perform(post("/api/tasks")
                         .with(token)
@@ -134,13 +139,11 @@ public class TaskControllerTest {
                         .content(om.writeValueAsString(data)))
                 .andExpect(status().isCreated());
 
-        Task task = taskRepository.findByName(data.getName()).get();
+        Task task = taskRepository.findByName(data.getTitle()).get();
 
-        assertEquals(data.getName(), task.getName());
-        assertEquals(data.getIndex(), task.getIndex());
-        assertEquals(data.getDescription(), task.getDescription());
-        assertEquals(data.getTaskStatus().getSlug(), task.getTaskStatus().getSlug());
-        assertEquals(data.getAssignee().getEmail(), task.getAssignee().getEmail());
+        assertEquals(data.getTitle(), task.getName());
+        assertEquals(data.getStatus(), task.getTaskStatus().getSlug());
+        assertEquals(data.getAssigneeId(), task.getAssignee().getId());
     }
 
     @Test
@@ -152,10 +155,10 @@ public class TaskControllerTest {
         userRepository.save(user);
 
         Map<String, Object> data = Map.of(
-                "name", "name",
-                "description", "dasdsad dsafdf gffhgrtrew dfds",
-                "assignee", user,
-                "taskStatus", taskStatus
+                "title", "title",
+                "content", "Lots of letters...",
+                "assigneeId", user.getId(),
+                "status", taskStatus.getSlug()
         );
 
         mockMvc.perform(put("/api/tasks/" + testTask.getId())
@@ -166,10 +169,10 @@ public class TaskControllerTest {
 
         Task task = taskRepository.findById(testTask.getId()).get();
 
-        assertEquals(data.get("name"), task.getName());
-        assertEquals(data.get("description"), task.getDescription());
-        assertEquals(((TaskStatus) data.get("taskStatus")).getSlug(), task.getTaskStatus().getSlug());
-        assertEquals(((User) data.get("assignee")).getEmail(), task.getAssignee().getEmail());
+        assertEquals(data.get("title"), task.getName());
+        assertEquals(data.get("content"), task.getDescription());
+        assertEquals(data.get("status"), task.getTaskStatus().getSlug());
+        assertEquals(data.get("assigneeId"), task.getAssignee().getId());
     }
 
     @Test

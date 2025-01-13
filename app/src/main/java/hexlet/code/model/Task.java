@@ -1,8 +1,13 @@
 package hexlet.code.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
@@ -43,7 +48,6 @@ public class Task implements BaseEntity {
     private String description;
 
     @ManyToOne(optional = false)
-    @NotNull
     private TaskStatus taskStatus;
 
     @ManyToOne

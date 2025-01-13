@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -50,6 +52,9 @@ public class UserControllerTest {
 
     @Autowired
     private ObjectMapper om;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     private JwtRequestPostProcessor token;
 
@@ -118,7 +123,8 @@ public class UserControllerTest {
     public void updateTest() throws Exception {
         Map<String, String> data = Map.of(
                 "firstName", "Mike",
-                "lastName", "Smith");
+                "lastName", "Smith",
+                "password", "qwerty");
 
         mockMvc.perform(put("/api/users/" + testUser.getId())
                         .with(token)
@@ -130,6 +136,7 @@ public class UserControllerTest {
 
         assertEquals(data.get("firstName"), user.getFirstName());
         assertEquals(data.get("lastName"), user.getLastName());
+        assertTrue(user.getPassword().length() > 20);
     }
 
     @Test
