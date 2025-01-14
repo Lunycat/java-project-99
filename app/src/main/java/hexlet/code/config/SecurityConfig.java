@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -46,10 +47,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/task_statuses/*").permitAll()
                         .requestMatchers("/api/tasks").permitAll()
                         .requestMatchers("/api/tasks/*").permitAll()
+                        .requestMatchers("/api/labels").permitAll()
+                        .requestMatchers("/api/labels/*").permitAll()
+                        .requestMatchers("/h2-console/*").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer((rs) -> rs.jwt((jwt) -> jwt.decoder(jwtDecoder)))
+                .oauth2ResourceServer(rs -> rs.jwt((jwt) -> jwt.decoder(jwtDecoder)))
                 .httpBasic(Customizer.withDefaults())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .build();
     }
 

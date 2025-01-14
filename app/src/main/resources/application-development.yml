@@ -4,4 +4,6 @@ spring:
     username: "Lunycat"
     password: ""
   h2:
-    console.enabled: true
+    console:
+      enabled: true
+      path: /h2-console
