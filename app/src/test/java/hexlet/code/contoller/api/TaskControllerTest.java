@@ -3,6 +3,7 @@ package hexlet.code.contoller.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.task.TaskCreateDTO;
+import hexlet.code.dto.task.TaskParamsDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
@@ -12,6 +13,7 @@ import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.specification.TaskSpecification;
 import hexlet.code.util.ModelGenerator;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
@@ -69,6 +72,9 @@ public class TaskControllerTest {
     @Autowired
     private ObjectMapper om;
 
+    @Autowired
+    private TaskSpecification specification;
+
     private JwtRequestPostProcessor token;
 
     private TaskStatus testTaskStatus;
@@ -106,6 +112,8 @@ public class TaskControllerTest {
 
     @Test
     public void indexTest() throws Exception {
+        Specification<Task> spec = specification.build(new TaskParamsDTO());
+
         MockHttpServletResponse response = mockMvc.perform(
                 get("/api/tasks").with(token))
                 .andExpect(status().isOk())
@@ -113,7 +121,7 @@ public class TaskControllerTest {
                 .getResponse();
         String body = response.getContentAsString();
 
-        List<Task> expected = taskRepository.findAll();
+        List<Task> expected = taskRepository.findAll(spec);
         List<Task> actual = om.readValue(body, new TypeReference<>() { });
 
         assertEquals(expected, actual);

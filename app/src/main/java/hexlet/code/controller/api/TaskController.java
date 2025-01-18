@@ -7,8 +7,7 @@ import hexlet.code.dto.task.TaskUpdateDTO;
 import hexlet.code.service.TaskService;
 
 import jakarta.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
@@ -23,16 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
 
-    @Autowired
-    private TaskService service;
+    private final TaskService service;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<TaskDTO> index(TaskParamsDTO dto, @RequestParam(defaultValue = "1") int page) {
+    public List<TaskDTO> index(TaskParamsDTO dto, @RequestParam(defaultValue = "1") int page) {
         return service.findAll(dto, page);
     }
 

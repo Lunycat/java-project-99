@@ -4,9 +4,11 @@ import hexlet.code.dto.tasksstatus.TaskStatusCreateDTO;
 import hexlet.code.dto.tasksstatus.TaskStatusDTO;
 import hexlet.code.dto.tasksstatus.TaskStatusUpdateDTO;
 import hexlet.code.service.TaskStatusService;
+
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,12 +21,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/task_statuses")
 public class TaskStatusController {
 
-    @Autowired
-    private TaskStatusService service;
+    private final TaskStatusService service;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

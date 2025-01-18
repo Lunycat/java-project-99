@@ -29,8 +29,7 @@ import java.util.stream.Collectors;
         uses = {JsonNullableMapper.class, ReferenceMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class TaskMapper {
 
     @Autowired
@@ -60,7 +59,9 @@ public abstract class TaskMapper {
     @Mapping(source = "labelsId", target = "labels")
     public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
 
-    public abstract Page<TaskDTO> toPageTaskDTO(Page<Task> models);
+    public List<TaskDTO> toListTaskDTO(Page<Task> models) {
+        return models.map(this::toTaskDTO).toList();
+    }
 
     protected TaskStatus toTaskStatus(String slug) {
         return taskStatusRepository.findBySlug(slug)

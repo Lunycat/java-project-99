@@ -18,8 +18,7 @@ import java.util.List;
         uses = {JsonNullableMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class TaskStatusMapper {
 
     public abstract TaskStatusDTO toTaskStatusDTO(TaskStatus model);

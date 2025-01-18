@@ -9,27 +9,27 @@ import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.specification.TaskSpecification;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@RequiredArgsConstructor
 @Service
 public class TaskService {
 
-    @Autowired
-    private TaskRepository repository;
+    private final TaskRepository repository;
 
-    @Autowired
-    private TaskMapper mapper;
+    private final TaskMapper mapper;
 
-    @Autowired
-    private TaskSpecification specification;
+    private final TaskSpecification specification;
 
-    public Page<TaskDTO> findAll(TaskParamsDTO params, int page) {
+    public List<TaskDTO> findAll(TaskParamsDTO params, int page) {
         var spec = specification.build(params);
         Page<Task> tasks = repository.findAll(spec, PageRequest.of(page - 1, 10));
-        return mapper.toPageTaskDTO(tasks);
+        return mapper.toListTaskDTO(tasks);
     }
 
     public TaskDTO findById(Long id) {

@@ -3,13 +3,10 @@ package hexlet.code.mapper;
 import org.mapstruct.Condition;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-
 import org.openapitools.jackson.nullable.JsonNullable;
 
-@Mapper(
-        componentModel = MappingConstants.ComponentModel.SPRING
-)
-public class JsonNullableMapper {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public abstract class JsonNullableMapper {
 
     public <T> JsonNullable<T> wrap(T entity) {
         return JsonNullable.of(entity);
