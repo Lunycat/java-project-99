@@ -18,6 +18,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
 import java.util.HashSet;
 import java.util.List;
@@ -59,7 +60,7 @@ public abstract class TaskMapper {
     @Mapping(source = "labelsId", target = "labels")
     public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
 
-    public abstract List<TaskDTO> toListTaskDTO(List<Task> models);
+    public abstract Page<TaskDTO> toPageTaskDTO(Page<Task> models);
 
     protected TaskStatus toTaskStatus(String slug) {
         return taskStatusRepository.findBySlug(slug)

@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/tasks/*").permitAll()
                         .requestMatchers("/api/labels").permitAll()
                         .requestMatchers("/api/labels/*").permitAll()
+                        .requestMatchers("/h2-console").permitAll()
                         .requestMatchers("/h2-console/*").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
