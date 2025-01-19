@@ -112,10 +112,37 @@ public class TaskControllerTest {
 
     @Test
     public void indexTest() throws Exception {
-        Specification<Task> spec = specification.build(new TaskParamsDTO());
-
         MockHttpServletResponse response = mockMvc.perform(
                 get("/api/tasks").with(token))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        String body = response.getContentAsString();
+
+        List<Task> expected = taskRepository.findAll();
+        List<Task> actual = om.readValue(body, new TypeReference<>() { });
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void indexTestWithParams() throws Exception {
+        TaskParamsDTO paramsDTO = TaskParamsDTO.builder()
+                .titleCont(testTask.getName())
+                .status(testTask.getTaskStatus().getSlug())
+                .assigneeId(testTask.getAssignee().getId())
+                .labelId(testLabel.getId())
+                .build();
+        Specification<Task> spec = specification.build(paramsDTO);
+
+        String params = String.format("?titleCont=%s&assigneeId=%s&status=%s&labelId=%s",
+                testTask.getName(),
+                testTask.getAssignee().getId(),
+                testTask.getTaskStatus().getSlug(),
+                testLabel.getId());
+
+        MockHttpServletResponse response = mockMvc.perform(
+                        get("/api/tasks" + params).with(token))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -126,6 +153,7 @@ public class TaskControllerTest {
 
         assertEquals(expected, actual);
     }
+
 
     @Test
     public void showTest() throws Exception {
