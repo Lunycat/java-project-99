@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@sentry/cli": "^2.41.1"
+    "@hexlet/java-task-manager-frontend": "^1.0.25"
   }
 }
