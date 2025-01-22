@@ -37,8 +37,10 @@ public abstract class UserMapper {
 
     @BeforeMapping
     public void encodePassword(UserUpdateDTO dto) {
-        String password = dto.getPassword().get();
-        dto.setPassword(JsonNullable.of(encoder.encode(password)));
+        if (dto.getPassword() != null) {
+            String password = dto.getPassword().get();
+            dto.setPassword(JsonNullable.of(encoder.encode(password)));
+        }
     }
 
     @Mapping(target = "passwordDigest", source = "password")
