@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,9 +32,11 @@ public class TaskController {
     private final TaskService service;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<TaskDTO> index(TaskParamsDTO dto, @RequestParam(defaultValue = "1") int page) {
-        return service.findAll(dto, page);
+    public ResponseEntity<List<TaskDTO>> index(TaskParamsDTO dto, @RequestParam(defaultValue = "1") int page) {
+        List<TaskDTO> tasksDTO = service.findAll(dto, page);
+        return ResponseEntity.ok()
+                .header("X-Total-Count", String.valueOf(tasksDTO.size()))
+                .body(tasksDTO);
     }
 
     @GetMapping("/{id}")

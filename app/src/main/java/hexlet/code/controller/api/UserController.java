@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,9 +30,11 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> index() {
-        return service.findAll();
+    public ResponseEntity<List<UserDTO>> index() {
+        List<UserDTO> usersDTO = service.findAll();
+        return ResponseEntity.ok()
+                .header("X-Total-Count", String.valueOf(usersDTO.size()))
+                .body(usersDTO);
     }
 
     @GetMapping("/{id}")
