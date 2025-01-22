@@ -39,21 +39,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/login").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/index.html").permitAll()
-                        .requestMatchers("/api/users").permitAll()
-                        .requestMatchers("/api/users/*").permitAll()
-                        .requestMatchers("/api/task_statuses").permitAll()
-                        .requestMatchers("/api/task_statuses/*").permitAll()
-                        .requestMatchers("/api/tasks").permitAll()
-                        .requestMatchers("/api/tasks/*").permitAll()
-                        .requestMatchers("/api/labels").permitAll()
-                        .requestMatchers("/api/labels/*").permitAll()
-                        .requestMatchers("/h2-console").permitAll()
-                        .requestMatchers("/h2-console/*").permitAll()
+                        .requestMatchers("/assets/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(rs -> rs.jwt((jwt) -> jwt.decoder(jwtDecoder)))
                 .httpBasic(Customizer.withDefaults())
-                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .build();
     }
 
