@@ -21,5 +21,5 @@ public class TaskCreateDTO {
     private int index;
     private String content;
     private Long assigneeId;
-    private Set<Long> labelsId = new HashSet<>();
+    private Set<Long> taskLabelIds = new HashSet<>();
 }

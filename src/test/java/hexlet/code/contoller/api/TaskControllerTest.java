@@ -131,11 +131,11 @@ public class TaskControllerTest {
                 .titleCont(testTask.getName())
                 .status(testTask.getTaskStatus().getSlug())
                 .assigneeId(testTask.getAssignee().getId())
-                .labelId(testLabel.getId())
+                .taskLabelIds(testLabel.getId())
                 .build();
         Specification<Task> spec = specification.build(paramsDTO);
 
-        String params = String.format("?titleCont=%s&assigneeId=%s&status=%s&labelId=%s",
+        String params = String.format("?titleCont=%s&assigneeId=%s&status=%s&taskLabelIds=%s",
                 testTask.getName(),
                 testTask.getAssignee().getId(),
                 testTask.getTaskStatus().getSlug(),
@@ -177,7 +177,7 @@ public class TaskControllerTest {
         data.setTitle("Title");
         data.setAssigneeId(testUser.getId());
         data.setStatus(testTaskStatus.getSlug());
-        data.setLabelsId(new HashSet<>(Set.of(testLabel.getId())));
+        data.setTaskLabelIds(new HashSet<>(Set.of(testLabel.getId())));
 
         mockMvc.perform(post("/api/tasks")
                         .with(token)
@@ -190,7 +190,7 @@ public class TaskControllerTest {
         assertEquals(data.getTitle(), task.getName());
         assertEquals(data.getStatus(), task.getTaskStatus().getSlug());
         assertEquals(data.getAssigneeId(), task.getAssignee().getId());
-        Set<Label> labels = new HashSet<>(labelRepository.findAllById(data.getLabelsId()));
+        Set<Label> labels = new HashSet<>(labelRepository.findAllById(data.getTaskLabelIds()));
         assertEquals(task.getLabels(), labels);
     }
 
@@ -209,7 +209,7 @@ public class TaskControllerTest {
                 "content", "Lots of letters...",
                 "assigneeId", user.getId(),
                 "status", taskStatus.getSlug(),
-                "labelsId", new HashSet<>(Set.of(label.getId())));
+                "taskLabelIds", new HashSet<>(Set.of(label.getId())));
 
         mockMvc.perform(put("/api/tasks/" + testTask.getId())
                         .with(token)
