@@ -45,7 +45,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-application { mainClass.set("hexlet.code.Application") }
+application { mainClass.set("hexlet.code.AppApplication") }
 
 java {
     toolchain {
