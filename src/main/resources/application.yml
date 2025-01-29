@@ -19,5 +19,5 @@ rsa:
   public-key: classpath:certs/public.pem
 
 sentry:
-  dsn: ${DSN}
+  dsn: ${SENTRY_DSN:}
   traces-sample-rate: 1.0
