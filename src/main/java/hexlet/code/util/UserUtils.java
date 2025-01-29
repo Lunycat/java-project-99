@@ -3,6 +3,7 @@ package hexlet.code.util;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -19,5 +20,11 @@ public class UserUtils {
         }
         var email = authentication.getName();
         return userRepository.findByEmail(email).get();
+    }
+
+    public boolean isCurrentUser(Long id) {
+        User user = userRepository.findById(id).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName().equals(user.getEmail());
     }
 }
