@@ -17,6 +17,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
       - name: Build with Gradle
         run: ./gradlew build
+      - name: Add DNS
+        env:
+          DSN: ${{secrets.DSN}}
       - name: Publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
         env:
