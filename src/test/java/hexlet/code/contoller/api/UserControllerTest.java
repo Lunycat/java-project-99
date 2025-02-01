@@ -2,7 +2,6 @@ package hexlet.code.contoller.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
@@ -16,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.StatusResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -55,6 +55,7 @@ public class UserControllerTest {
     private JwtRequestPostProcessor token;
 
     private User testUser;
+    private StatusResultMatchers status;
 
     @BeforeEach
     public void setUp() {
@@ -63,8 +64,8 @@ public class UserControllerTest {
                 .apply(springSecurity())
                 .build();
 
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
         userRepository.save(testUser);
     }
 
@@ -116,7 +117,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateTest() throws Exception {
+    public void updateCorrectTokenTest() throws Exception {
         Map<String, String> data = Map.of(
                 "firstName", "Mike",
                 "lastName", "Smith",
@@ -136,12 +137,37 @@ public class UserControllerTest {
     }
 
     @Test
-    public void deleteTest() throws Exception {
+    public void updateInCorrectTokenTest() throws Exception {
+        Map<String, String> data = Map.of(
+                "firstName", "Mike",
+                "lastName", "Smith",
+                "password", "qwerty");
+
+        JwtRequestPostProcessor inCorrectToken = jwt().jwt(builder -> builder.subject("dsadasf@mail.ru"));
+
+        status = status();
+        mockMvc.perform(put("/api/users/" + testUser.getId())
+                        .with(inCorrectToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(data)))
+                .andExpect(status.isForbidden());
+    }
+
+    @Test
+    public void deleteCorrectTokenTest() throws Exception {
         mockMvc.perform(delete("/api/users/" + testUser.getId()).with(token))
                 .andExpect(status().isNoContent());
 
-        assertThrows(ResourceNotFoundException.class, () -> {
-            throw new ResourceNotFoundException("");
-        });
+        assertFalse(userRepository.existsById(testUser.getId()));
+    }
+
+    @Test
+    public void deleteInCorrectTokenTest() throws Exception {
+        JwtRequestPostProcessor inCorrectToken = jwt().jwt(builder -> builder.subject("dsadasf@mail.ru"));
+
+        mockMvc.perform(delete("/api/users/" + testUser.getId()).with(inCorrectToken))
+                .andExpect(status().isForbidden());
+
+        assertTrue(userRepository.existsById(testUser.getId()));
     }
 }
